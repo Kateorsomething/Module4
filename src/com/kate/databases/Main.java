@@ -11,8 +11,8 @@ public class Main {
 
         DatabaseHandler handler = new DatabaseHandler();
 
-        DatabaseHandler.getHandler().parseFile("CSVFiles/testData.csv","TEST");
-        DatabaseHandler.getHandler().writeFile("TEST");
+//        DatabaseHandler.getHandler().parseFile("CSVFiles/testData.csv","TEST");
+//        DatabaseHandler.getHandler().writeFile("TEST");
 
         try {
             DatabaseHandler.connection.close();

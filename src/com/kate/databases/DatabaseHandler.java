@@ -82,6 +82,7 @@ public class DatabaseHandler {
                 for (int i = 1; i < columns ; i++) {
                     stm = "ALTER TABLE " + tableName + "\n"
                             + "ADD " + headers[i] + " VARCHAR(200)";
+                    System.out.println(stm);
                     this.statement.execute(stm);
                 }
             }
@@ -122,7 +123,7 @@ public class DatabaseHandler {
     }
 
     /**
-     * creates a table with columns named C1, C2... in database
+     * creates a table with first row as column names (no special characters)
      * inserts null by default if # of elements in value < # of columns
      * @param filePath path to CSV file
      * @param tableName name of table created
