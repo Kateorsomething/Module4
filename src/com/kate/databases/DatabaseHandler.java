@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseHandler {
@@ -60,10 +61,11 @@ public class DatabaseHandler {
 
     /**
      * helper method: create table if none exists
+     * first column defaults to primary key
      * @param tableName must begin with letter
      * @param columns number of columns in the table created
      */
-    private void createTable(String tableName, int columns) {
+    private void createTable(String tableName, int columns,String[] headers) {
 
         try {
             statement = connection.createStatement();
@@ -74,12 +76,12 @@ public class DatabaseHandler {
                 System.out.println("table " + tableName + " already exists");
             } else {
                 String stm = "CREATE TABLE " + tableName + " ("
-                        + "C1 VARCHAR(200) primary key)";
+                        + headers[0] + " VARCHAR(200) primary key)";
                 this.statement.execute(stm);
 
-                for (int i = 2; i <= columns ; i++) {
+                for (int i = 1; i < columns ; i++) {
                     stm = "ALTER TABLE " + tableName + "\n"
-                            + "ADD C" + i + " VARCHAR(200)";
+                            + "ADD " + headers[i] + " VARCHAR(200)";
                     this.statement.execute(stm);
                 }
             }
@@ -98,12 +100,20 @@ public class DatabaseHandler {
     public static String getElement(String tableName, String columnName, String primaryKey) {
         try {
             statement = connection.createStatement();
-            String stm = "SELECT " + columnName + " FROM " + tableName + " WHERE C1 = '" + primaryKey + "'";
+            ResultSet primaryKeys = connection.getMetaData().getPrimaryKeys(null,null,tableName);
+            String key = "";         //finding the primary key column name
+            while (primaryKeys.next()) {
+                key = primaryKeys.getString("COLUMN_NAME");
+                break;
+            }
+
+            String stm = "SELECT " + columnName + " FROM " + tableName + " WHERE " + key + " = '" + primaryKey + "'";
             ResultSet resultset = statement.executeQuery(stm);
+
             if (resultset.next()) {
                 return resultset.getString(columnName);
             } else {
-                throw new RuntimeException("no element found");
+                return "no element found";
             }
         } catch (SQLException e) {
             System.err.println(e);
@@ -133,29 +143,32 @@ public class DatabaseHandler {
                     records.add(record.values());
                 }
 
-            //create table with column # of longest entry
+            //create table
             int colNum = 1;
             for (String[] record : records) {
                 if (record.length > colNum) {
                     colNum = record.length;
                 }
             }
-            createTable(tableName,colNum);
+
+            createTable(tableName,colNum,records.get(0));
 
             //iterate through arrays to add value into table
             for (String[] record : records) {
-                String stm = "INSERT INTO " + tableName + "\n"
-                        + "VALUES (";
-            for (String value : record) {
-                stm = stm + "'" + value + "', ";
-            }
-            if (record.length < colNum) {
-                for (int i = 1 ; i <= colNum-record.length ; i++) {
-                    stm = stm + "NULL ,";
+                if (record != records.get(0)) {
+                    String stm = "INSERT INTO " + tableName + "\n"
+                            + "VALUES (";
+                    for (String value : record) {
+                    stm = stm + "'" + value + "', ";
                 }
-            }
-            stm = stm.substring(0,stm.length()-2) + ")";
-            this.statement.execute(stm);
+                    if (record.length < colNum) {
+                    for (int i = 1 ; i <= colNum-record.length ; i++) {
+                        stm = stm + "NULL ,";
+                    }
+                }
+                    stm = stm.substring(0,stm.length()-2) + ")";
+                    this.statement.execute(stm);
+                }
             }
 
         } catch (FileNotFoundException e) {

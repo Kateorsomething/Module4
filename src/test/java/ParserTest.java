@@ -18,7 +18,8 @@ public class ParserTest {
     public void parseFile1() {
         DatabaseHandler.getHandler().executeAction("DROP TABLE TEST");
         handler.getHandler().parseFile("CSVFiles/testData.csv","TEST");
-        assertEquals(handler.getHandler().getElement("TEST","C1","Aaron, Judge"),"Aaron, Judge");
+        System.out.println(handler.getHandler().getElement("TEST","C2","Aaron, Judge"));
+        assertEquals(handler.getHandler().getElement("TEST","NAME","Aaron, Judge"),"Aaron, Judge");
     }
 
     @org.junit.Test
@@ -48,7 +49,7 @@ public class ParserTest {
 
     @org.junit.Test
     public void parseFile7() {
-        assertEquals(handler.getHandler().getElement("TEST","C1",""),"");
+        assertEquals(handler.getHandler().getElement("TEST","NAME",""),"");
         try {
             DatabaseHandler.connection.close();
         } catch (SQLException e) {
