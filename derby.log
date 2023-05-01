@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Mon May 01 06:12:54 UTC 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0187-d5f1-4c99-0000076877e0 
+on database directory C:\Users\marys\OneDrive\Desktop\Programming12\Module4\database\forum with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@42110406 
+Loaded from file:/C:/Users/marys/AppData/Roaming/JetBrains/IntelliJIdea2022.2/jdbc-drivers/Apache%20Derby/10.15.2.0/derby-10.15.2.0.jar
+java.vendor=JetBrains s.r.o.
+java.runtime.version=17.0.4.1+7-b469.62
+user.dir=C:\Users\marys\OneDrive\Desktop\Programming12\Module4
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
